@@ -12,7 +12,7 @@ import lombok.Data;
 public class Bookmark {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private long id;
+	private Long id;
 	private String name;
 	private String description;
 	private String url;
