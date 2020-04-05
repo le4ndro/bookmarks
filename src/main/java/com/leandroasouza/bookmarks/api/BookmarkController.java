@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.ResponseEntity;
@@ -21,23 +22,24 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.leandroasouza.bookmarks.model.Bookmark;
 import com.leandroasouza.bookmarks.repository.BookmarkRepository;
+import com.leandroasouza.bookmarks.service.BookmarkService;
 
 @RestController
 public class BookmarkController {
 	
 	private final Logger LOGGER = LoggerFactory.getLogger(BookmarkController.class);
 
-	private BookmarkRepository bookmarkRepository;
 	private BookmarkResourceAssembler assembler;
+	private BookmarkService service;
 		
-	public BookmarkController(BookmarkRepository bookmarkRepository, BookmarkResourceAssembler assembler) {
-		this.bookmarkRepository = bookmarkRepository;
+	public BookmarkController(BookmarkResourceAssembler assembler, BookmarkService service) {
 		this.assembler = assembler;
+		this.service = service;
 	}
 	
 	@RequestMapping(value="/bookmarks", method=RequestMethod.GET)
-	Resources<Resource<Bookmark>> getAll() {
-		List<Resource<Bookmark>> bookmarks = bookmarkRepository.findAll()
+	public Resources<Resource<Bookmark>> getAll() {
+		List<Resource<Bookmark>> bookmarks = service.findAll()
 														.stream()
 														.map(assembler::toResource)
 														.collect(Collectors.toList());
@@ -49,14 +51,14 @@ public class BookmarkController {
 	@RequestMapping(value="/bookmarks", method=RequestMethod.POST)
 	public ResponseEntity<?> createBookmark(@RequestBody Bookmark bookmark) throws URISyntaxException {
 		LOGGER.debug("Executing post /bookmarks");
-		Resource<Bookmark> resource = assembler.toResource(bookmarkRepository.save(bookmark));
+		Resource<Bookmark> resource = assembler.toResource(service.save(bookmark));
 		
 		return ResponseEntity.created(new URI(resource.getId().expand().getHref())).body(resource);
 	}
 	
 	@RequestMapping(value="/bookmarks/{id}", method=RequestMethod.GET)
 	public Resource<Bookmark> getOne(@PathVariable Long id) {
-		Bookmark bookmark = bookmarkRepository.findById(id)
+		Bookmark bookmark = service.findById(id)
 									.orElseThrow(() -> new BookmarkNotFoundException(id));
 		
 		return assembler.toResource(bookmark);
@@ -65,7 +67,7 @@ public class BookmarkController {
 	@RequestMapping(value="/bookmarks/{id}", method=RequestMethod.DELETE)
 	public ResponseEntity<?> delete(@PathVariable long id) {
 		
-		bookmarkRepository.deleteById(id);
+		service.deleteById(id);
 		
 		return ResponseEntity.noContent().build();
 	}
@@ -73,16 +75,16 @@ public class BookmarkController {
 	@RequestMapping(value="bookmarks/{id}", method=RequestMethod.PUT)
 	public ResponseEntity<?> update(@RequestBody Bookmark newBookmark, @PathVariable Long id) throws URISyntaxException {
 		
-		Bookmark bookmark = bookmarkRepository.findById(id)
+		Bookmark bookmark = service.findById(id)
 						.map(b -> {
 							b.setName(newBookmark.getName());
 							b.setDescription(newBookmark.getDescription());
 							b.setUrl(newBookmark.getUrl());
 							b.setTags(newBookmark.getTags());
-							return bookmarkRepository.save(b);
+							return service.save(b);
 						}).orElseGet(() -> {
 							newBookmark.setId(id);
-							return bookmarkRepository.save(newBookmark);
+							return service.save(newBookmark);
 						});
 		
 		Resource<Bookmark> resource = assembler.toResource(bookmark);

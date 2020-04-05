@@ -8,6 +8,8 @@ export DATABASE_USERNAME="username"
 export DATABASE_PASSWORD="password"
 export DATABASE_SERVER="localhost"
 export DATABASE_PORT="5432"
+export REDIS_HOST="127.0.0.1"
+export REDIS_PORT="6379"
 
 export SUPORT_EMAIL="mail@test.com"
 
@@ -17,6 +19,8 @@ export DATABASE_USERNAME_DEV="username"
 export DATABASE_PASSWORD_DEV="password"
 export DATABASE_SERVER_DEV="localhost"
 export DATABASE_PORT_DEV="5432"
+export REDIS_HOST_DEV="127.0.0.1"
+export REDIS_PORT_DEV="6379"
 
 export SUPORT_EMAIL_DEV="mail@test.com"
 
@@ -26,6 +30,8 @@ export DATABASE_USERNAME_TEST="username"
 export DATABASE_PASSWORD_TEST="password"
 export DATABASE_SERVER_TEST="localhost"
 export DATABASE_PORT_TEST="5432"
+export REDIS_HOST_TEST="127.0.0.1"
+export REDIS_PORT_TEST="6379"
 
 export SUPORT_EMAIL_TEST="mail@test.com"
 
@@ -35,6 +41,8 @@ export DATABASE_USERNAME_PROD="username"
 export DATABASE_PASSWORD_PROD="password"
 export DATABASE_SERVER_PROD="localhost"
 export DATABASE_PORT_PROD="5432"
+export REDIS_HOST_TEST="127.0.0.1"
+export REDIS_PORT_TEST="6379"
 
 #smtp settings
 
