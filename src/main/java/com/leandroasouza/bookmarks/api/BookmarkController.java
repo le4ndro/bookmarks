@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +20,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.leandroasouza.bookmarks.model.Bookmark;
-import com.leandroasouza.bookmarks.repository.BookmarkRepository;
 import com.leandroasouza.bookmarks.service.BookmarkService;
 
+import io.swagger.annotations.Api;
+
+@Api(tags = "Bookmarks", description = "Provide Bookmarks API's")
 @RestController
 public class BookmarkController {
 	
