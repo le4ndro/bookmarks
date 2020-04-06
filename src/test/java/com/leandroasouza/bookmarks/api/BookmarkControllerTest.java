@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.leandroasouza.bookmarks.model.Bookmark;
 import com.leandroasouza.bookmarks.repository.BookmarkRepository;
+import com.leandroasouza.bookmarks.service.BookmarkService;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = BookmarkController.class, 
@@ -33,7 +34,7 @@ public class BookmarkControllerTest {
 	private MockMvc mockMvc;
 	
 	@MockBean
-	private BookmarkRepository bookmarks;
+	private BookmarkService bookmarks;
 	
 	@Before
 	public void Setup() {
@@ -51,5 +52,11 @@ public class BookmarkControllerTest {
 	public void testGetOne() throws Exception {
 		
 		mockMvc.perform(get("/bookmarks/{id}", TEST_BOOKMARK_ID)).andExpect(status().isOk());
+	}
+	
+	@Test
+	public void testGetAll() throws Exception {
+		
+		mockMvc.perform(get("/bookmarks/")).andExpect(status().isOk());
 	}
 }
